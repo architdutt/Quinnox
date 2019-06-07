@@ -1,0 +1,53 @@
+public with sharing class AccountTriggerhandler {
+    
+    
+    public static void handler1(List<Account> newlist,List<Account> oldlist,map<Id,Account> oldmap ){
+        
+        
+        if(trigger.isdelete && trigger.isbefore){
+            
+            List<Contact> contactlist = new List<contact>();
+            contactlist =[select id,accountid from contact where accountid  in :oldmap.keyset()];
+            
+            for (Account a:oldlist){
+                if(a.AnnualRevenue  >5000){
+                    a.adderror('Cannot delete account with revene greater than 5000');
+                }
+                
+                for(Contact c:contactlist){
+                    if(c.accountid == a.id){
+                        a.adderror('Cannot delete this account as there are related contacts');
+                    }
+                }
+            }
+        }
+        
+        if((trigger.isInsert ||trigger.isUpdate)  && trigger.isBefore){
+            
+            
+            for(Account a:newlist){
+                // system.debug('Trigger new' +trigger.new);
+                // system.debug('Triger newmap'+trigger.newmap);
+                a.rating ='Hot';
+                if(a.AnnualRevenue <100){
+                    a.adderror('Annualrevent must be 500 minimum');
+                }
+                
+            }
+        }
+        
+        
+        if(trigger.isinsert && trigger.isafter){
+            List<contact> cnlist = new List<contact>();
+            Contact cnobj ;
+            for (Account ac:newlist){
+                
+                cnobj = new Contact(Lastname = ac.name,accountid = ac.id );
+                cnlist.add(cnobj);
+            }    
+            insert cnlist;
+        }  
+        
+    }
+    
+}
