@@ -1,3 +1,8 @@
-list<Account> acc = new list<account>();
-acc = [select id from account where name like '%Quin%'];
-delete acc;
+trigger Accountrigger1 on Account (before insert,before update,before delete,after insert ,after update) {
+
+
+    if(trigger.isInsert && trigger.isBefore){
+           system.debug(trigger.new);
+           system.debug(trigger.newmap);
+    }
+}
