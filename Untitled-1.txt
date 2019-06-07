@@ -1,12 +1,154 @@
+SearchGo To LineUndoRedoIncrease Font SizeDecrease Font Size
+ 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
 trigger Accountrigger1 on Account (before insert,before update,before delete,after insert ,after update) {
 
 
 if(trigger.isdelete && trigger.isbefore){
+
+     List<Contact> contactlist = new List<contact>();
+     contactlist =[select id,accountid from contact where account  in :trigger.oldmap.keyset()];
  
     for (Account a:trigger.old){
           if(a.AnnualRevenue  >5000){
             a.adderror('Cannot delete account with revene greater than 5000');
           }
+          
+          
+              for(Contact c:contactlist){
+                   if(c.accountid == a.id){
+                       a.adderror('Cannot delete this account as there are related contacts');
+                       
+                   }
+              }
+          
     }
 
 }
@@ -26,3 +168,44 @@ if((trigger.isInsert ||trigger.isUpdate)  && trigger.isBefore){
        }
      }
   }
+trigger Accountrigger1 on Account (before insert,before update,before delete,after insert ,after update) {
+
+
+if(trigger.isdelete && trigger.isbefore){
+
+     List<Contact> contactlist = new List<contact>();
+     contactlist =[select id,accountid from contact where account  in :trigger.oldmap.keyset()];
+ 
+    for (Account a:trigger.old){
+          if(a.AnnualRevenue  >5000){
+            a.adderror('Cannot delete account with revene greater than 5000');
+          }
+          
+          
+              for(Contact c:contactlist){
+                   if(c.accountid == a.id){
+                       a.adderror('Cannot delete this account as there are related contacts');
+                       
+                   }
+              }
+          
+    }
+
+}
+
+
+if((trigger.isInsert ||trigger.isUpdate)  && trigger.isBefore){
+      
+       
+       for(Account a:trigger.new){
+       // system.debug('Trigger new' +trigger.new);
+       // system.debug('Triger newmap'+trigger.newmap);
+         a.rating ='Hot';
+           if(a.AnnualRevenue <100){
+              a.adderror('Annualrevent must be 500 minimum');
+           }
+       
+       }
+     }
+  }
+Position:	Ln 8, Ch 2	Total:	Ln 40, Ch 1101	
