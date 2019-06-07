@@ -1,8 +1,13 @@
 trigger Accountrigger1 on Account (before insert,before update,before delete,after insert ,after update) {
 
 
-    if(trigger.isInsert && trigger.isBefore){
-           system.debug(trigger.new);
-           system.debug(trigger.newmap);
-    }
-}
+if((trigger.isInsert ||Trigger.isupdate) && trigger.isBefore){
+      
+       
+       for(Account a:trigger.new){
+        system.debug('Trigger new' +trigger.new);
+        system.debug('Triger newmap'+trigger.newmap);
+       
+       }
+     }
+  }
