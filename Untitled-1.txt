@@ -1,1 +1,3 @@
-test checking in changed
+list<Account> acc = new list<account>();
+acc = [select id from account where name like '%Quin%'];
+delete acc;
