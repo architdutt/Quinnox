@@ -1,12 +1,27 @@
 trigger Accountrigger1 on Account (before insert,before update,before delete,after insert ,after update) {
 
 
-if((trigger.isInsert ||Trigger.isupdate) && trigger.isBefore){
+if(trigger.isdelete && trigger.isbefore){
+ 
+    for (Account a:trigger.old){
+          if(a.AnnualRevenue  >5000){
+            a.adderror('Cannot delete account with revene greater than 5000');
+          }
+    }
+
+}
+
+
+if((trigger.isInsert ||trigger.isUpdate)  && trigger.isBefore){
       
        
        for(Account a:trigger.new){
-        system.debug('Trigger new' +trigger.new);
-        system.debug('Triger newmap'+trigger.newmap);
+       // system.debug('Trigger new' +trigger.new);
+       // system.debug('Triger newmap'+trigger.newmap);
+         a.rating ='Hot';
+           if(a.AnnualRevenue <100){
+              a.adderror('Annualrevent must be 500 minimum');
+           }
        
        }
      }
