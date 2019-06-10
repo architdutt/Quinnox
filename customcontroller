@@ -1,0 +1,89 @@
+public with sharing class Customaccountclass {
+    public Account acc{get;set;}
+    public Boolean x {get;set;}
+    public Contact cont{get;set;}    
+      public List<contact> contlistnew{get;set;}
+    public Customaccountclass(){  
+        cont = new contact();
+        acc = new Account();
+        x=false;
+    }
+    public void toogleit(){
+        if(x==true )x =false; else x =true;
+    }
+    public void Save1(){
+        system.debug('Value from vf page'+x);
+        insert acc;
+    }
+    
+    public void Save2(){
+        cont.AccountId = acc.id;
+        insert cont;
+         updatelistofnew();
+        x=false;
+        cont = null;
+        
+    }
+    
+     public void updatelistofnew(){
+        contlistnew  = new List<Contact>([select lastname from contact where accountid = :acc.Id]);
+      
+    }
+    
+
+}
+
+
+<apex:page Controller="Customaccountclass"  tabStyle="Account"  >
+    <apex:slds />
+    <apex:form >
+        
+        <apex:pageblock >
+            <apex:pageblocksection title="Enter Account detail" rendered="true"  >
+                <apex:inputField value="{!acc.name}" label="Name" />  
+                <apex:inputField value="{!acc.AccountRevenue__c}" label="Revenue" />   
+                <apex:inputField value="{!acc.rating}" label="Name" />
+                
+                <apex:outputPanel >
+                 
+                        <apex:inputcheckbox  value="{!x}" label="Show contact form" />
+                        <apex:actionSupport  immediate="true" event="onclick" action="{!toogleit}"/> 
+         
+                    
+                </apex:outputPanel>
+                
+            </apex:pageblocksection>
+            
+            <apex:pageblocksection  >               
+                <apex:inputField value="{!acc.Billingcity}" label="City" />  
+                <apex:inputField value="{!acc.billingPostalcode}" label="postalcode" />  
+                <apex:inputField value="{!acc.BillingStreet}" label="Address" />  
+            </apex:pageblocksection>
+            
+            <apex:pageblockbuttons location="bottom" >
+                
+                <apex:commandbutton action="{!Save1}" value="Custom Save"/>
+            </apex:pageblockbuttons>
+        </apex:pageblock>
+        
+        <apex:pageblock title ="Contacts" id="contact" rendered="{!x}">
+            <apex:inputField value="{!cont.lastname}"/>
+               <apex:pageblockbuttons location="bottom" >
+                
+                <apex:commandbutton action="{!Save2}" value="Savecontact"/>
+            </apex:pageblockbuttons>
+        </apex:pageblock>
+        
+        
+      <apex:pageblock title="contact Records created today">
+          <apex:pageBlockTable value="{!contlistnew}" var="aaa">
+             <apex:column value="{!aaa.lastname}"/>
+            
+            </apex:pageBlockTable>
+        
+        </apex:pageblock>
+        
+        
+    </apex:form>
+    
+</apex:page>
