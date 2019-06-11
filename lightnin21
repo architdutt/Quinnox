@@ -1,0 +1,15 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name ="Amount" type="double" />
+    <aura:attribute name ="Tenure" type="double" />
+    <aura:attribute name ="final" type="double" />
+    
+    <aura:attribute name ="Roi" type="double" />
+    
+    <ui:inputnumber label ="Deposit amount" value="{!v.Amount}"/>
+    <ui:inputnumber label ="Tenure" value="{!v.Tenure}"/>
+    <ui:inputnumber label ="Interest" value="{!v.Roi}"/>
+    
+    Your Final Returns will be : <ui:outputnumber value ="{!v.final}"/>
+   <lightning:button variant="base" label="Base" title="Calculate returns" />
+     
+</aura:component>
