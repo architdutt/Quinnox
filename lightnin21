@@ -13,3 +13,12 @@
    <lightning:button variant="base" label="Base" title="Calculate returns" />
      
 </aura:component>
+var amt = component.get("v.Amount");
+        var dur = component.get("v.Tenure");
+        var intr= component.get("v.Roi");
+        console.log(amt+''+dur+''+intr);
+        var cal =0;
+        if(dur > 10)
+        cal = amt*intr/100;
+        else
+        cal = amt*7/100;
