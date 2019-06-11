@@ -1,0 +1,37 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="change" value="{!v.Roi}" action="{!c.logroi}"/>
+    <aura:handler name="change" value="{!v.Tenure}" action="{!c.tenurecheck}"/>
+    <aura:attribute name ="Amount" type="double" />
+    <aura:attribute name ="Tenure" type="double" />
+    <aura:attribute name ="final" type="double" />
+    
+    <aura:attribute name ="Roi" type="double" />
+      Please enter coupon details
+    <ui:inputnumber label ="Deposit amount" value="{!v.Amount}"/>
+    <ui:inputnumber label ="Tenure" aura:id ="tenure"  value="{!v.Tenure}"/>
+    <ui:inputnumber label ="Interest" value="{!v.Roi}"/>
+    
+    Your Final Returns will be : <ui:outputnumber value ="{!v.final}"/>
+    <br/>
+   <lightning:button  label="Calculate returns"   onclick="{!c.calcreturns}"/>
+     
+</aura:component>
+
+
+  if(tag1.get("v.value") >12){
+            
+            tag1.set("v.errors",[{message: 'Tenure cannot be more than 12'}])
+        }  else{
+             tag1.set("v.errors",[{message: ''}])
+        }
+        
+	},
+	calcreturns: function(component, event, helper) {
+        console.log(component);
+             helper.helperMethod1(component,event,helper);
+             
+	},
+    
+  logroi: function(component, event, helper) {
+        console.log(component.get("v.Roi"));
+       console.log("previous value"+sessionStorage.getItem("Prate"));
