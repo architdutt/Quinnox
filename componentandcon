@@ -1,0 +1,161 @@
+({   doInit  : function(component, event, helper){
+   // debugger;
+    console.log(component.get("v.recordId"));
+    var action =component.get("c.fetchacc");
+    if(component.get("v.recordId") =='undefined' || component.get("v.recordId") ==null){
+        
+        
+    }else{
+        action.setParams({idd:component.get("v.recordId")});
+        action.setCallback(this ,function(x){                           
+            
+            component.set("v.acc",x.getReturnValue());
+        });  
+         $A.enqueueAction(action);	
+    }
+    
+    
+    
+},
+  
+  
+  handleClick : function(component, event, helper) {
+      //debugger;
+      //
+      if (component.get("v.recordId") == 'undefined' || component.get("v.recordId") == null){
+      var action =component.get("c.createacc");
+      
+      action.setParams({Name:component.get("v.acc.Name"),
+                        Accountrevenue:component.get("v.acc.AccountRevenue__c"),
+                        numemp :component.get("v.acc.NumberOfEmployees")});
+          
+      }else{
+          var action =component.get("c.updateacc");
+      
+      action.setParams({Name:component.get("v.acc.Name"),
+                        Accountrevenue:component.get("v.acc.AccountRevenue__c"),
+                        idd :component.get("v.recordId"),
+                        numemp :component.get("v.acc.NumberOfEmployees")});
+          
+      }   
+      action.setCallback(this ,function(x){                           
+          console.log(x.getReturnValue());
+          if(x.getReturnValue().indexOf('REQUIRED_FIELD_MISSING')!= -1){
+              
+              component.set("v.flag1","true");
+              component.set("v.errormessage",x.getReturnValue());
+          }else{
+              
+              var event = $A.get('e.force:navigateToSObject');
+              event.setParams({
+                  
+                  "recordId":  x.getReturnValue(),                 
+                  "slideDevName": "related"
+                  
+              }); 
+              event.fire();  
+          }
+          
+          
+      });
+      $A.enqueueAction(action);	
+      
+  }
+ })
+ 
+ 
+ <aura:component controller="Accountaurocontroller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+   <aura:handler name="init"  value="{!this}" action="{!c.doInit}"/>   
+  
+    <aura:attribute name ="acc" type="Account" default="{'sobjectType':'Account'}"/>
+    <aura:attribute name ="errormessage"  type="String" default =""/>
+    <aura:attribute name ="flag1" type="Boolean" default ="true"/>
+       <aura:if isTrue="{!v.flag1}">
+    {!v.errormessage} test
+    </aura:if>
+
+    <fieldset class="slds-form-element slds-form-element_compound">
+        <legend class="slds-form-element__legend slds-form-element__label"> <div class="slds-global-header__item">
+        <div class="slds-global-header__logo"> Enter Account Detail</div>
+    </div>
+</legend>
+        <div class="slds-form-element__control">
+            <div class="slds-form-element__row">
+                <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                                               <div class="slds-form-element__control">
+                            <ui:inputtext  label ="Account Name " value="{!v.acc.Name}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                           <div class="slds-form-element__control">
+                            <ui:inputnumber  label="Revenue"    value ="{!v.acc.AccountRevenue__c}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+      <fieldset class="slds-form-element slds-form-element_compound">
+        <legend class="slds-form-element__legend slds-form-element__label"> <div class="slds-global-header__item">
+        <div class="slds-global-header__logo"> Enter Account Detail</div>
+    </div>
+</legend>
+        <div class="slds-form-element__control">
+            <div class="slds-form-element__row">
+                <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                                               <div class="slds-form-element__control">
+                            <ui:inputnumber  label ="Number of emp " value="{!v.acc.NumberOfEmployees}"/>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </fieldset>
+    
+    <aura:if isTrue ="{!showmodal}">
+    <div style="height:640px">
+<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+<div class="slds-modal__container">
+<header class="slds-modal__header">
+<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+</svg>
+<span class="slds-assistive-text">Close</span>
+</button>
+<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal Header</h2>
+</header>
+<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+<p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi. Mollit officia cillum Lorem ullamco minim nostrud elit officia tempor esse quis. Cillum sunt ad dolore
+quis aute consequat ipsum magna exercitation reprehenderit magna. Tempor cupidatat consequat elit dolor adipisicing.</p>
+<p>Dolor eiusmod sunt ex incididunt cillum quis nostrud velit duis sit officia. Lorem aliqua enim laboris do dolor eiusmod officia. Mollit incididunt nisi consectetur esse laborum eiusmod pariatur proident. Eiusmod et adipisicing culpa deserunt nostrud
+ad veniam nulla aute est. Labore esse esse cupidatat amet velit id elit consequat minim ullamco mollit enim excepteur ea.</p>
+</div>
+<footer class="slds-modal__footer">
+<button class="slds-button slds-button_neutral">Cancel</button>
+<button class="slds-button slds-button_brand">Save</button>
+</footer>
+</div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+</div>
+    
+    </aura:if>
+    
+    
+    
+    <div class="slds-button-group" role="group">
+        <lightning:button variant="brand" label="Save"  onclick="{! c.handleClick }" />
+        <lightning:button variant="success" label="Cancel"  />
+    </div>
+    
+</aura:component>
+ 
+ 
+ 
+ 
